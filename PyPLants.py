@@ -1,9 +1,10 @@
-import os
+import sys
 import numpy as np
 
-def Test():
-    zero = np.sum(np.zeros(3))
-    if (abs(zero) < 1e-3):
-        print('External modules IS working')
-    else:
-        print('External modules NOT working')
+def CheckExternalModules():
+    modules = ['numpy']
+    for m in modules:
+        if m not in sys.modules:
+            print('ERROR: You have not imported the {} module'.format(m))
+            return
+    print('All modules imported correctly')
