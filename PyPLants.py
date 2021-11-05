@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from math import pi, sin, cos
+import random
 
 DEGREES_TO_RADIANS = pi / 180
 
@@ -64,7 +65,7 @@ def L_system(sequence, turn_angle=45, start = (0,0), start_angle = 90):
             yield (x, y)
 
 def transform_sequence(sequence, transformations):
-    return ''.join(transformations.get(c, c) for c in sequence)
+    return ''.join(random.choice(transformations.get(c, c)) for c in sequence)
 
 def transform_multiple(sequence, transformations, iterations):
     for _ in range(iterations):
