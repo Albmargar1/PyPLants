@@ -6,25 +6,22 @@ from math import pi, sin, cos
 DEGREES_TO_RADIANS = pi / 180
 
 def Check_external_modules():
-    modules = ['numpy', 'matplotlib']
+    modules = ['numpy', 'matplotlib', 'math']
     for m in modules:
         if m not in sys.modules:
             print('ERROR: You have not imported the {} module'.format(m))
             return
     print('All modules imported correctly')
     
-def Test_plt():
-    x = [1, 2, 3]
-    y = np.array([[1, 2], [3, 4], [5, 6]])
-    plt.plot(x, y)
-    
 def Plot_points(points, margins = 0.2, debug_plot = False):
+    plt.figure(figsize=(12, 8), dpi=120)
+    axes = plt.axes()
     
     if not debug_plot:
         plt.axis('off')
         plt.margins(x=margins, y=margins)
-
-    plt.axes().set_aspect('equal', 'datalim')
+        
+    axes.set_aspect('equal', 'datalim')
     x, y = zip(*points)
     plt.plot(x, y)
     
