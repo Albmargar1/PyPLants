@@ -1,41 +1,90 @@
 import random
+from itertools import groupby
+import re
+import copy
 
-def is_float(string, parameters_dictionary):
+def Get_value(string):
     try:        
         return float(string)
-    except ValueError:
-        try:
-            return parameters_dictionary.get(string)
-        except ValueError:
-            return string
+    except:
+        return string
 
-def Parametric_string_to_list(sequence, parameters_dictionary):
+def Try_dictionary(dictionary, key):
+    try:
+        return dictionary[key]
+    except:
+        return key
+
+def add(a,b): return a+b
+def sub(a,b): return a-b
+def mul(a,b): return a*b
+def div(a,b): return a/b
+def str_operation(string): return eval(string)
+
+def Parametric_string_to_list(sequence, dictionary):
+    # First, ignore spaces and split into list based on '|'
+    sequence = sequence.replace(' ', '')
+    sequence_list = sequence.split('|')
+    
+    # Next, replace values into parameters
+    # sequence_separated = [[''.join(g) for _, g in groupby(i, str.isalpha)] for i in sequence_list]
+    # sequence_values = [''.join([str(Try_dictionary(dictionary, c)) for c in i]) for i in sequence_separated]
+            
     out = []
+    aux_list = []
     parameters = []
     aux = ''
-    filling_parameters = False
-    for character in sequence:
-        if character == '(':
-            filling_parameters = True
-        elif character == ')':
-            filling_parameters = False
-            if aux != '':
-                parameters.append(is_float(aux, parameters_dictionary))
-                aux = ''
-            out[-1].append(parameters)
-            parameters = []
+    opened_parenthesis = 0
+    for sentence in sequence_list:
+        for character in sentence:
+            if character == ')':
+                opened_parenthesis -= 1
+                
+            if opened_parenthesis == 0:
+                if character == ')':
+                    if aux != '':
+                        parameters.append(aux)
+                        aux = ''
+                    aux_list[-1].append(parameters)
+                    parameters = []
+                elif character != '(':
+                    aux_list.append([character])
+                                
+            elif opened_parenthesis > 0:
+                if character == ',' and opened_parenthesis == 1:
+                    parameters.append(aux)
+                    aux = ''
+                else:
+                    aux = ''.join([aux, character])
             
-        elif not filling_parameters:
-            out.append([character])
-            
-        elif character != ',':
-            aux = ''.join([aux, character])
-        elif character == ',':
-            parameters.append(is_float(aux, parameters_dictionary))
-            aux = ''
-            
+            if character == '(':
+                opened_parenthesis += 1
+        out.append(aux_list)
+        aux_list = []
+    
+    if len(out) == 1:
+        out = out[0]
     return out
             
+def Transform_parametric(sequence, transformation):
+    out = []
+    for s in sequence:
+        if s[0] == transformation[0][0][0]:
+            aux_transform = copy.deepcopy(transformation[1])
+            for k in range(len(aux_transform)):
+                if len(aux_transform[k]) > 1:
+                    for i in range(len(aux_transform[k][1])):
+                        if len(transformation[0][0]) > 1:
+                            for j in range(len(transformation[0][0][1])):
+                                if len(s) > 1:
+                                    for l in range(len(s[1])):
+                                        aux_transform[k][1][i] = s[1][l].replace(transformation[0][0][1][j], transformation[1][k][1][i])
+            out.extend(aux_transform)
+        else:
+            out.append(s)
+    
+    return out
+
 def Transform_multiple(sequence, transformations, iterations):
     for _ in range(iterations):
         sequence = Transform_sequence(sequence, transformations)
