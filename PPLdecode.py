@@ -61,6 +61,11 @@ def Parametric_string_to_list(sequence, dictionary):
                 opened_parenthesis += 1
         out.append(aux_list)
         aux_list = []
+        
+    for l in out:
+        for p in l:
+            if len(p) == 1:
+                p.append([''])
     
     if len(out) == 1:
         out = out[0]
@@ -72,13 +77,10 @@ def Transform_parametric(sequence, transformation):
         if s[0] == transformation[0][0][0]:
             aux_transform = copy.deepcopy(transformation[1])
             for k in range(len(aux_transform)):
-                if len(aux_transform[k]) > 1:
-                    for i in range(len(aux_transform[k][1])):
-                        if len(transformation[0][0]) > 1:
-                            for j in range(len(transformation[0][0][1])):
-                                if len(s) > 1:
-                                    for l in range(len(s[1])):
-                                        aux_transform[k][1][i] = s[1][l].replace(transformation[0][0][1][j], transformation[1][k][1][i])
+                for i in range(len(aux_transform[k][1])):
+                    for j in range(len(transformation[0][0][1])):
+                        for l in range(len(s[1])):
+                            aux_transform[k][1][i] = aux_transform[k][1][i].replace(transformation[0][0][1][j], s[1][l])
             out.extend(aux_transform)
         else:
             out.append(s)
@@ -87,7 +89,7 @@ def Transform_parametric(sequence, transformation):
 
 def Transform_multiple(sequence, transformations, iterations):
     for _ in range(iterations):
-        sequence = Transform_sequence(sequence, transformations)
+        sequence = Transform_parametric(sequence, transformations)
     return sequence
 
     

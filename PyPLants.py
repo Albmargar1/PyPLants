@@ -52,6 +52,5 @@ dictionary['s'] = 1
 initiator = PPLdecode.Parametric_string_to_list('A(s)', dictionary)
 productor = PPLdecode.Parametric_string_to_list('A(s)|F(s)[+A(div(s,R))][-A(div(s,R))]', dictionary)
 
-out = PPLdecode.Transform_parametric(initiator, productor)
-out = PPLdecode.Transform_parametric(out, productor)
+out = PPLdecode.Transform_multiple(initiator, productor, 3)
 # L_plot('A', {'F': ['FF'], 'A': ['F[+AF-[A]--A][---A]']}, 3, 22.5)
