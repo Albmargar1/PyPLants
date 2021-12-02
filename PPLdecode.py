@@ -5,7 +5,7 @@ import copy
 
 def Get_value(string):
     try:        
-        return float(string)
+        return eval(string)
     except:
         return string
 
@@ -19,16 +19,19 @@ def add(a,b): return a+b
 def sub(a,b): return a-b
 def mul(a,b): return a*b
 def div(a,b): return a/b
-def str_operation(string): return eval(string)
 
-def Parametric_string_to_list(sequence, dictionary):
+def Deparametrize(sequence, parametric_dictionary):
+    for i in sequence:
+        for j in i[1]:            
+            separated = re.split('(\W)',j)
+            deparametrize = ''.join([str(Try_dictionary(parametric_dictionary, k)) for k in separated])
+            values = Get_value(deparametrize)
+            i[1] = values
+
+def Parametric_string_to_list(sequence):
     # First, ignore spaces and split into list based on '|'
     sequence = sequence.replace(' ', '')
     sequence_list = sequence.split('|')
-    
-    # Next, replace values into parameters
-    # sequence_separated = [[''.join(g) for _, g in groupby(i, str.isalpha)] for i in sequence_list]
-    # sequence_values = [''.join([str(Try_dictionary(dictionary, c)) for c in i]) for i in sequence_separated]
             
     out = []
     aux_list = []
