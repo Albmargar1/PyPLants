@@ -40,6 +40,8 @@ def L_system(sequence, turn_angle, start = (0,0), start_angle = 90):
             yield (x, y)
     
 def L_plot(initiator, generator, parametric_dictionary, iterations, angle):
+    initiator = PPLdecode.Parametric_string_to_list(initiator)
+    generator = PPLdecode.Parametric_string_to_list(generator)
     sequence = PPLdecode.Transform_multiple(initiator, generator, iterations)
     PPLdecode.Deparametrize(sequence, parametric_dictionary)
     points = L_system(sequence, turn_angle = angle)
@@ -50,7 +52,7 @@ parametric_dictionary = {}
 parametric_dictionary['R'] = 1.456
 parametric_dictionary['s'] = 1
 
-initiator = PPLdecode.Parametric_string_to_list('A(s)')
-generator = PPLdecode.Parametric_string_to_list('A(s)|F(s)[+A(div(s,R))][-A(div(s,R))]')
+initiator = 'A(s)'
+generator = 'A(s)|F(s)[+A(div(s,R))][-A(div(s,R))]'
 
-L_plot(initiator, generator, parametric_dictionary, iterations = 10, angle = 85)
+# L_plot(initiator, generator, parametric_dictionary, iterations = 10, angle = 85)
