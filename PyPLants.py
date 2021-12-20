@@ -1,8 +1,8 @@
-import matplotlib.pyplot as plt
 from math import pi, sin, cos
 
 import PPLdecode 
 import PPLutils
+import PPLclasses
 
 DEGREES_TO_RADIANS = pi / 180
 
@@ -49,10 +49,10 @@ def L_plot(initiator, generator, parametric_dictionary, iterations, angle):
 
 
 parametric_dictionary = {}
-parametric_dictionary['R'] = 1.456
 parametric_dictionary['s'] = 1
+parametric_dictionary['R'] = 1.456
 
 initiator = 'A(s)'
-generator = 'A(s)|F(s)[+A(div(s,R))][-A(div(s,R))]'
+generator = 'A(s)-->F(s)[+A(div(s,R))][-A(div(s,R))]'
 
-# L_plot(initiator, generator, parametric_dictionary, iterations = 10, angle = 85)
+L_plot(initiator, generator, parametric_dictionary, iterations = 10, angle = 85)

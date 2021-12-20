@@ -1,5 +1,4 @@
 import random
-from itertools import groupby
 import re
 import copy
 
@@ -29,9 +28,9 @@ def Deparametrize(sequence, parametric_dictionary):
             i[1] = values
 
 def Parametric_string_to_list(sequence):
-    # First, ignore spaces and split into list based on '|'
+    # First, ignore spaces and split into list based on '-->'
     sequence = sequence.replace(' ', '')
-    sequence_list = sequence.split('|')
+    sequence_list = sequence.split('-->')
             
     out = []
     aux_list = []
