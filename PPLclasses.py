@@ -25,9 +25,9 @@ class Point_plot():
         self.position = position
 
 class Instruction():
-    def __init__(self, action):
-        self.action = action
-        self.argument = {}
+    def __init__(self, axiom):
+        self.axiom = axiom
+        self.arguments = []
         
     def Add_argument(self, name, value):
         self.arguments[name] = value
@@ -58,26 +58,26 @@ class Translate(Instruction):
         
 class Rotate(Instruction):
     def Action(self, state, saved_states, points):
-        if self.action == '+':
+        if self.axiom == '+':
             state = (state(0), state(1), state(2), state(3) + self.argument('rotation'), state(4), state(5))
-        if self.action == '-':
+        if self.axiom  == '-':
             state = (state(0), state(1), state(2), state(3) - self.argument('rotation'), state(4), state(5))
-        if self.action == '&':
+        if self.axiom  == '&':
             state = (state(0), state(1), state(2), state(3), state(4) + self.argument('rotation'), state(5))
-        if self.action == '^':
+        if self.axiom  == '^':
             state = (state(0), state(1), state(2), state(3), state(4) - self.argument('rotation'), state(5))
-        if self.action == '\\':
+        if self.axiom  == '\\':
             state = (state(0), state(1), state(2), state(3), state(4), state(5) + self.argument('rotation'))
-        if self.action == '/':
+        if self.axiom  == '/':
             state = (state(0), state(1), state(2), state(3), state(4), state(5) - self.argument('rotation'))
-        if self.action == '|':
+        if self.axiom  == '|':
             state = (state(0), state(1), state(2), state(3) + self.argument(pi), state(4), state(5))
             
 class Branch(Instruction):
     def Action(self, state, saved_states, points):
-        if self.action == '[':
+        if self.axiom  == '[':
             saved_states.append(state)
-        elif self.action == ']':                       # Return to previous state
+        elif self.axiom  == ']':                       # Return to previous state
             state = saved_states.pop()
             points.append(Point_plot((float('nan'), float('nan'), float('nan'))))
             points.append(Point_plot((state(0), state(1), state(2))))

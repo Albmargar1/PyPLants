@@ -2,6 +2,9 @@ import random
 import re
 import copy
 
+import PPLclasses
+import PPLutils
+
 def Get_value(string):
     try:        
         return eval(string)
@@ -27,15 +30,66 @@ def Deparametrize(sequence, parametric_dictionary):
             values = Get_value(deparametrize)
             i[1] = values
 
+# def Parametric_string_to_list(sequence):
+#     # First, ignore spaces and split into list based on '-->'
+#     sequence = sequence.replace(' ', '')
+#     sequence_list = sequence.split('-->')
+            
+#     out = []
+#     aux_list = []
+#     parameters = []
+#     aux = ''
+#     opened_parenthesis = 0
+#     for sentence in sequence_list:
+#         for character in sentence:
+#             if character == ')':
+#                 opened_parenthesis -= 1
+                
+#             if opened_parenthesis == 0:
+#                 if character == ')':
+#                     if aux != '':
+#                         parameters.append(aux)
+#                         aux = ''
+#                     aux_list[-1].append(parameters)
+#                     parameters = []
+#                 elif character != '(':
+#                     aux_list.append([character])
+                                
+#             elif opened_parenthesis > 0:
+#                 if character == ',' and opened_parenthesis == 1:
+#                     parameters.append(aux)
+#                     aux = ''
+#                 else:
+#                     aux = ''.join([aux, character])
+            
+#             if character == '(':
+#                 opened_parenthesis += 1
+#         out.append(aux_list)
+#         aux_list = []
+        
+#     for l in out:
+#         for p in l:
+#             if len(p) == 1:
+#                 p.append([''])
+    
+#     if len(out) == 1:
+#         out = out[0]
+#     return out
+
 def Parametric_string_to_list(sequence):
     # First, ignore spaces and split into list based on '-->'
     sequence = sequence.replace(' ', '')
+    production_string_position = [sequence.find('-->'), sequence.find('-->')+2]
+    
+    # First level parenthesis encapsulate arguments, succesive parenthesis are related to math operations
+    first_level_parenthesis = PPLutils.find_parentheses(sequence)
+
     sequence_list = sequence.split('-->')
-            
+        
     out = []
-    aux_list = []
-    parameters = []
-    aux = ''
+    next_instruction = -1
+    next_instruction_parameters = []
+    aux_parameters = ''
     opened_parenthesis = 0
     for sentence in sequence_list:
         for character in sentence:
@@ -44,33 +98,26 @@ def Parametric_string_to_list(sequence):
                 
             if opened_parenthesis == 0:
                 if character == ')':
-                    if aux != '':
-                        parameters.append(aux)
-                        aux = ''
-                    aux_list[-1].append(parameters)
-                    parameters = []
+                    if aux_parameters != '':
+                        next_instruction_parameters.append(aux_parameters)
+                        aux_parameters = ''
+                    next_instruction.arguments = next_instruction_parameters
+                    next_instruction_parameters = []
                 elif character != '(':
-                    aux_list.append([character])
+                    next_instruction = PPLclasses.Instruction(character)
                                 
             elif opened_parenthesis > 0:
                 if character == ',' and opened_parenthesis == 1:
-                    parameters.append(aux)
-                    aux = ''
+                    next_instruction_parameters.append(aux_parameters)
+                    aux_parameters = ''
                 else:
-                    aux = ''.join([aux, character])
+                    aux_parameters = ''.join([aux_parameters, character])
             
             if character == '(':
                 opened_parenthesis += 1
-        out.append(aux_list)
-        aux_list = []
+        out.append(next_instruction)
+        # Predecessor, production, successor
         
-    for l in out:
-        for p in l:
-            if len(p) == 1:
-                p.append([''])
-    
-    if len(out) == 1:
-        out = out[0]
     return out
             
 def Transform_parametric(sequence, transformation):
